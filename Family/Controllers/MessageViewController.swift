@@ -78,6 +78,7 @@ class MessageViewController: MessagesViewController {
         messages.sort()
         //salam
         //new comment
+        // new
         let isLatestMessage = messages.firstIndex(of: message) == (messages.count - 1)
         let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
         
