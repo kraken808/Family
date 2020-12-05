@@ -7,7 +7,9 @@
 //
 
 import UIKit
-
+import Firebase
+import GoogleSignIn
+import FirebaseAuth
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -17,7 +19,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        window = UIWindow(windowScene: windowScene)
+        window?.makeKeyAndVisible()
+        if let user = Auth.auth().currentUser{
+            
+            FirestoreService.shared.getUserData(user: user){ result in
+            switch result{
+            case .success(let muser):
+                print(muser)
+                print("name: \(muser.name) \n lastname: \(muser.lastname)")
+                self.window?.rootViewController = MenuViewController(currentUser: muser)
+            case .failure(_):
+                print("\n \n error hetting data! \n \n")
+                self.window?.rootViewController = LoginViewController()
+            }
+            }
+        }else {
+            window?.rootViewController = LoginViewController()
+        }
+//        window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -25,6 +48,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+        FirebaseApp.configure()
+    
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
