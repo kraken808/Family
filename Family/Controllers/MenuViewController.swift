@@ -41,7 +41,7 @@ class MenuViewController: UITabBarController {
                   let mainImage = UIImage(systemName: "rectangle.3.offgrid", withConfiguration: boldConfig)!
             viewControllers = [
                       generateNavigationController(rootViewController: MainViewController(currentUser: currentUser), title: "Main", image: mainImage),
-                      generateNavigationController(rootViewController: CreateViewController(), title: "Create", image: addImage),
+                      generateNavigationController(rootViewController: CreateViewController(currentUser: currentUser), title: "Create", image: addImage),
                       generateNavigationController(rootViewController: ChatViewController(currentUser: currentUser), title: "Message", image: msgImage),
                       generateNavigationController(rootViewController: ProfileViewController(), title: "Profile", image: profileImage)
                       

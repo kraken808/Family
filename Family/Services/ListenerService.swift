@@ -51,7 +51,32 @@ class ListenerService {
         return usersListener
     } // usersObserve
     
-  
+    func itemsObserve(items: [MPost], completion: @escaping (Result<[MPost], Error>) -> Void) -> ListenerRegistration? {
+        var items = items
+        let usersListener = db.collection("posts").addSnapshotListener { (querySnapshot, error) in
+            guard let snapshot = querySnapshot else {
+                completion(.failure(error!))
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!\n!!!!!!!!!")
+                return
+            }
+            snapshot.documentChanges.forEach { (diff) in
+                guard let mpost = MPost(document: diff.document) else { return }
+                print("\(mpost)\n")
+                switch diff.type {
+                case .added:
+                    items.append(mpost)
+                case .modified:
+                    guard let index = items.firstIndex(of: mpost) else { return }
+                    items[index] = mpost
+                case .removed:
+                    guard let index = items.firstIndex(of: mpost) else { return }
+                    items.remove(at: index)
+                }
+            }
+            completion(.success(items))
+        }
+        return usersListener
+    } // usersObserve
     
     func activeChatsObserve(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
         var chats = chats

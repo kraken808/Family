@@ -12,8 +12,8 @@ import SDWebImage
 
 class UserCell: UICollectionViewCell, SelfConfiguringCell {
     
-    let userImageView = UIImageView()
-    let userName = UILabel(text: "Alexey", font: .laoSangamMN20())
+    let postImageView = UIImageView()
+    let postName = UILabel(text: "Alexey", font: .laoSangamMN20())
     let containerView = UIView()
     
     
@@ -40,25 +40,25 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     override func prepareForReuse() {
-        userImageView.image = nil
+        postImageView.image = nil
     }
     
     func configure<U>(with value: U) where U : Hashable {
-        guard let user: MUser = value as? MUser else { return }
-        userName.text = user.name
-        guard let url = URL(string: user.avatarURL) else { return }
-        userImageView.sd_setImage(with: url, completed: nil)
+        guard let post: MPost = value as? MPost else { return }
+        postName.text = post.name
+        guard let url = URL(string: post.imageUrl) else { return }
+        postImageView.sd_setImage(with: url, completed: nil)
     }
     
     private func setupConstraints() {
-        userImageView.translatesAutoresizingMaskIntoConstraints = false
-        userName.translatesAutoresizingMaskIntoConstraints = false
+        postImageView.translatesAutoresizingMaskIntoConstraints = false
+        postName.translatesAutoresizingMaskIntoConstraints = false
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        userImageView.backgroundColor = .red
+        postImageView.backgroundColor = .red
         
         addSubview(containerView)
-        containerView.addSubview(userImageView)
-        containerView.addSubview(userName)
+        containerView.addSubview(postImageView)
+        containerView.addSubview(postName)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -68,17 +68,17 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
         ])
         
         NSLayoutConstraint.activate([
-            userImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            userImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            userImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            userImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor)
+            postImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            postImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            postImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            postImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            userName.topAnchor.constraint(equalTo: userImageView.bottomAnchor),
-            userName.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-            userName.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            userName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            postName.topAnchor.constraint(equalTo: postImageView.bottomAnchor),
+            postName.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            postName.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            postName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
     

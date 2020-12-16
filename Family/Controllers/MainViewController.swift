@@ -13,17 +13,18 @@ import FirebaseFirestore
 class MainViewController: UIViewController {
     
     var users = [MUser]()
-    private var usersListener: ListenerRegistration?
+    var items = [MPost]()
+    private var postListener: ListenerRegistration?
     
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
+    var dataSource: UICollectionViewDiffableDataSource<Section, MPost>!
     
     enum Section: Int, CaseIterable {
         case users
         func description(usersCount: Int) -> String {
             switch self {
             case .users:
-                return "\(usersCount) people nearby"
+                return "Families"
             }
         }
     }
@@ -37,7 +38,7 @@ class MainViewController: UIViewController {
     }
     
     deinit {
-        usersListener?.remove()
+        postListener?.remove()
     }
     
     required init?(coder: NSCoder) {
@@ -53,15 +54,26 @@ class MainViewController: UIViewController {
         
      
         
-        usersListener = ListenerService.shared.usersObserve(users: users, completion: { (result) in
-            switch result {
-            case .success(let users):
-                self.users = users
-                self.reloadData(with: nil)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+//        postListener = ListenerService.shared.usersObserve(users: users, completion: { (result) in
+//            switch result {
+//            case .success(let users):
+//                self.users = users
+//                self.reloadData(with: nil)
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        })
+        
+        postListener = ListenerService.shared.itemsObserve(items: items, completion: { (result) in
+             switch result {
+                       case .success(let items):
+                           self.items = items
+                           self.reloadData(with: nil)
+                       case .failure(let error):
+                           print(error.localizedDescription)
+                       }
         })
+       
     }
 
     private func setupCollectionView() {
@@ -89,11 +101,11 @@ class MainViewController: UIViewController {
     }
     
     private func reloadData(with searchText: String?) {
-        let filtered = users.filter { (user) -> Bool in
-            user.contains(filter: searchText)
+        let filtered = items.filter { (post) -> Bool in
+            post.contains(filter: searchText)
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, MUser>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MPost>()
         snapshot.appendSections([.users])
         snapshot.appendItems(filtered, toSection: .users)
 
@@ -105,14 +117,14 @@ class MainViewController: UIViewController {
 // MARK: - Data Source
 extension MainViewController {
     private func createDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MUser>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, user) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, MPost>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, book) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
             
             switch section {
             case .users:
-                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: user, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: book, for: indexPath)
             }
         })
         
@@ -189,9 +201,10 @@ extension MainViewController: UISearchBarDelegate {
 
 // MARK: - UICollectionViewDelegate
 extension MainViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let user = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        let profileVC = PersonProfileViewController(user: user)
-        present(profileVC, animated: true, completion: nil)
-    }
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        guard let user = self.dataSource.itemIdentifier(for: indexPath) else { return }
+//        
+////        let profileVC = PersonProfileViewController(user: user)
+////        present(profileVC, animated: true, completion: nil)
+//    }
 }

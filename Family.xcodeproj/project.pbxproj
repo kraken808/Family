@@ -49,9 +49,9 @@
 		FBB9D89A24FD199C0074579F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB9D89924FD199C0074579F /* AppDelegate.swift */; };
 		FBB9D89C24FD199C0074579F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB9D89B24FD199C0074579F /* SceneDelegate.swift */; };
 		FBB9D89E24FD199C0074579F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB9D89D24FD199C0074579F /* LoginViewController.swift */; };
-		FBB9D8A124FD199C0074579F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBB9D89F24FD199C0074579F /* Main.storyboard */; };
 		FBB9D8A324FD19A10074579F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBB9D8A224FD19A10074579F /* Assets.xcassets */; };
 		FBB9D8A624FD19A10074579F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBB9D8A424FD19A10074579F /* LaunchScreen.storyboard */; };
+		FBDDF98D257B3F3D00E775E7 /* MPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDDF98C257B3F3D00E775E7 /* MPost.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,10 +100,10 @@
 		FBB9D89924FD199C0074579F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FBB9D89B24FD199C0074579F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FBB9D89D24FD199C0074579F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		FBB9D8A024FD199C0074579F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FBB9D8A224FD19A10074579F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FBB9D8A524FD19A10074579F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FBB9D8A724FD19A10074579F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FBDDF98C257B3F3D00E775E7 /* MPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPost.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +192,7 @@
 				FB07100025545B2E0090C26F /* MUser.swift */,
 				FB071028255F98FE0090C26F /* MChat.swift */,
 				FB2B3761256157D3001F1448 /* MMessage.swift */,
+				FBDDF98C257B3F3D00E775E7 /* MPost.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -251,7 +252,6 @@
 				FB357A252502580600D5A8AE /* Controllers */,
 				FBB9D89924FD199C0074579F /* AppDelegate.swift */,
 				FBB9D89B24FD199C0074579F /* SceneDelegate.swift */,
-				FBB9D89F24FD199C0074579F /* Main.storyboard */,
 				FBB9D8A224FD19A10074579F /* Assets.xcassets */,
 				FBB9D8A424FD19A10074579F /* LaunchScreen.storyboard */,
 				FBB9D8A724FD19A10074579F /* Info.plist */,
@@ -325,7 +325,6 @@
 				FBB9D8A624FD19A10074579F /* LaunchScreen.storyboard in Resources */,
 				FB071003255BD0DA0090C26F /* GoogleService-Info.plist in Resources */,
 				FBB9D8A324FD19A10074579F /* Assets.xcassets in Resources */,
-				FBB9D8A124FD199C0074579F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +423,7 @@
 				FB20139124FD513A0091CA91 /* MainViewController.swift in Sources */,
 				FB2B375C25614EC6001F1448 /* GradientView.swift in Sources */,
 				FB20139724FD51630091CA91 /* ProfileViewController.swift in Sources */,
+				FBDDF98D257B3F3D00E775E7 /* MPost.swift in Sources */,
 				FB20138D24FD51000091CA91 /* RegistrationViewController.swift in Sources */,
 				FB2B376E2562595C001F1448 /* UIViewController + exstension.swift in Sources */,
 				FB070FFF255457A20090C26F /* ChatViewController.swift in Sources */,
@@ -441,14 +441,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		FBB9D89F24FD199C0074579F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FBB9D8A024FD199C0074579F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FBB9D8A424FD19A10074579F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -510,7 +502,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -564,7 +556,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

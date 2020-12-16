@@ -14,7 +14,7 @@ class FirestoreService{
     
     let db = Firestore.firestore()
     var currentUser: MUser!
-    
+ 
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void){
         let dataRef = db.collection("users").document(user.uid)
         dataRef.getDocument { (document, error) in
@@ -49,10 +49,7 @@ class FirestoreService{
                                sex: sex!,
                                id: id)
         
-                print("\n---------\n")
-                print("current user is: \(muser)")
-                
-                print("\n---------\n")
+               
         let newUserRef = db.collection("users").document(id)
         StorageService.shared.upload(photo: avatarImage!){ (result) in
             switch result {
@@ -68,8 +65,65 @@ class FirestoreService{
         }
     
     }
+    func savePostInfo(name: String,
+    postImage: UIImage?,
+    postOwnerId: String,
+    numberOfUsers: String,
+    period: String,completion:@escaping (Result<MPost,Error>) -> Void){
+          guard postImage != #imageLiteral(resourceName: "avatar") else {
+        
+                    print("error image")
+                    return
+                }
+        
+                let uuid = UUID().uuidString
+                
+                     
+                     
+                var mpost = MPost(name: name,
+                                  imageUrl: "",
+                                  postOwnerId: postOwnerId,
+                                  numberOfUsers: numberOfUsers,
+                                  postId: uuid,
+                                  period: period)
+        
+        let temp = db.collection("posts").document(uuid)
+              StorageService.shared.upload(photo: postImage!){ (result) in
+                  switch result {
+                      
+                  case .success(let url):
+                      mpost.imageUrl = url.absoluteString
+                       temp.setData(mpost.convert)
+                      completion(.success(mpost))
+                  case .failure(let error):
+                      completion(.failure(error))
+                   
+                  }
+              }
+                      
+//        let newUserRef = db.collection(["users", postOwnerId, "posts"].joined(separator: "/")).document(uuid)
+//
+//                StorageService.shared.upload(photo: postImage!){ (result) in
+//                    switch result {
+//
+//                    case .success(let url):
+//                        mpost.imageUrl = url.absoluteString
+//
+//                         newUserRef.setData(mpost.convert) { (error) in
+//                         if let error = error {
+//                             completion(.failure(error))
+//                             return
+//                         }
+//                        }
+//                        completion(.success(mpost))
+//                    case .failure(let error):
+//                        completion(.failure(error))
+//
+//                    }
+//                }
+    }
     func createActiveChat(user: MUser, message: String, completion: @escaping (Result<Void, Error>) -> Void) {
-//        print("\n---------\n")
+//       print("\n---------\n")
 //        print("current user is: \(currentUser)")
 //        print("\n---------\n")
          

@@ -16,6 +16,9 @@ struct MChat: Hashable, Decodable {
     var friendId: String
     var friendLastname: String
     
+    
+    
+    
     var convert: [String : Any] {
         var rep = ["friendName": friendUsername]
         rep["friendAvatarURL"] = friendAvatarStringURL
