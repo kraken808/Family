@@ -17,8 +17,15 @@ class CreateViewController: UIViewController {
     
     var memberPickerView = UIPickerView()
     var periodPickerView = UIPickerView()
-    var numbersArray = [2,3,4]
+    var categoryPickerView = UIPickerView()
+    var numbersArray = [2,3,4,5,6]
     var periodArray = ["1 Month","2 Month","3 Month", "4 Month or More"]
+    let movies = MCategory(name: "Movie", imageUrl: "reel")
+    let education = MCategory(name: "Education", imageUrl: "book")
+    let music = MCategory(name: "Music", imageUrl: "music")
+    
+    let mcategory = [MCategory]()
+    var category = ["Movies","Education","Music"]
     var toolbar: UIToolbar!
    
     let welcomeLabel = UILabel(text: "Create Post", font: .avenir26())
@@ -28,19 +35,20 @@ class CreateViewController: UIViewController {
     let nameLabel = UILabel(text: "Post Name")
     let numberOfUser = UILabel(text: "Number of Members")
     let periodLabel = UILabel(text: "Period")
-    let sexLabel = UILabel(text: "Sex")
+    let categoryLabel = UILabel(text: "Category")
     
     
     let nameTextField = OneLineTextField(font: .avenir20())
     let numOfMembersTextField = OneLineTextField(font: .avenir20())
     let periodTextField = OneLineTextField(font: .avenir20())
+    let categoryTextField = OneLineTextField(font: .avenir20())
     
     let sexSegmentedControl = UISegmentedControl(first: "Male", second: "Femail")
     
     let publicateButton = UIButton(title: "Publish!", titleColor: .white, backgroundColor: .buttonDark(), cornerRadius: 4)
     
     private let currentUser: MUser
-    
+    var categories = [MCategory]()
     init(currentUser: MUser) {
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
@@ -52,31 +60,47 @@ class CreateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .cyan
-        
+      
+        view.backgroundColor = .white
+        categories.append(movies)
+        categories.append(education)
+        categories.append(music)
         numOfMembersTextField.inputView = memberPickerView
         periodTextField.inputView = periodPickerView
+        categoryTextField.inputView = categoryPickerView
         memberPickerView.delegate = self
         memberPickerView.dataSource = self
         
         periodPickerView.delegate = self
         periodPickerView.dataSource = self
-
+        
+        categoryPickerView.delegate = self
+        categoryPickerView.dataSource = self
+       
         memberPickerView.tag = 1
         periodPickerView.tag = 2
+        categoryPickerView.tag = 3
         
         setupConstraints()
         publicateButton.addTarget(self, action: #selector(publicateButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-    
         
-          
-             
+//             for item in categories{
+//                         FirestoreService.shared.saveCategory(name:item.name, iconImage: UIImage(named: item.imageUrl )) { (result) in
+//                                                switch result {
+//                                                          case .success(let _):
+//
+//                                                              self.showAlert(with: "Успешно!", and: "Данные сохранены!",completion: {
+//                                                              })
+//                                                          case .failure(let error):
+//                                                              self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+//                                                          }
+//                                           }
+//                 }
 
     }
     
- 
+  
   
 //    func creatPickerForMember(){
 //
@@ -111,7 +135,7 @@ class CreateViewController: UIViewController {
           let periodStackView = UIStackView(arrangedSubviews: [periodLabel, periodTextField],
           axis: .vertical,
           spacing: 0)
-          let sexStackView = UIStackView(arrangedSubviews: [sexLabel, sexSegmentedControl],
+          let sexStackView = UIStackView(arrangedSubviews: [categoryLabel, categoryTextField],
           axis: .vertical,
           spacing: 12)
           
@@ -120,7 +144,7 @@ class CreateViewController: UIViewController {
               nameStackView,
               memberStackView,
               periodStackView,
-//              sexStackView,
+              sexStackView,
               publicateButton
               ], axis: .vertical, spacing: 40)
           
@@ -158,18 +182,20 @@ class CreateViewController: UIViewController {
                                              period: periodTextField.text!) { (result) in
             switch result {
             case .success(let mpost):
-                print("**************\n")
-                print(mpost)
-                print("**************\n")
+               
                 self.showAlert(with: "Успешно!", and: "Данные сохранены!",completion: {
                     self.nameTextField.text = ""
                     self.numOfMembersTextField.text = ""
                     self.fullImageView.circleImageView.image = nil
+                    self.periodTextField.text = ""
                 })
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)
             }
         }
+        
+    
+        
         
         
     }
@@ -201,6 +227,9 @@ extension CreateViewController: UIPickerViewDelegate{
                     case 2:
                         periodTextField.text = periodArray[row]
                         periodTextField.resignFirstResponder()
+                    case 3:
+                        categoryTextField.text = category[row]
+                        categoryTextField.resignFirstResponder()
                     default:
                         return
                     }
@@ -220,6 +249,8 @@ extension CreateViewController: UIPickerViewDataSource  {
             return numbersArray.count
         case 2:
             return periodArray.count
+        case 3:
+            return category.count
         default:
             return 1
         }
@@ -231,6 +262,8 @@ extension CreateViewController: UIPickerViewDataSource  {
                    return "\(numbersArray[row])"
                case 2:
                    return periodArray[row]
+               case 3:
+                   return category[row]
                default:
                    return "Not found!"
                }

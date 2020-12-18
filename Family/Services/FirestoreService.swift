@@ -122,6 +122,39 @@ class FirestoreService{
 //                    }
 //                }
     }
+    
+    func saveCategory(name: String, iconImage: UIImage?,completion: @escaping (Result<MCategory, Error>) -> Void){
+        
+  
+            guard iconImage != nil else {
+                completion(.failure(UserError.photoNotExist))
+                print("error image")
+                return
+            }
+             
+            
+                 
+            var mcategory =  MCategory(name: name, imageUrl: "")
+            
+        let id = UUID().uuidString
+        mcategory.categoryId = id
+        
+            let newUserRef = db.collection("category").document(mcategory.categoryId)
+            StorageService.shared.uploadCategory(photo: iconImage!){ (result) in
+                switch result {
+                    
+                case .success(let url):
+                    mcategory.imageUrl = url.absoluteString
+                     newUserRef.setData(mcategory.convert)
+                    completion(.success(mcategory))
+                case .failure(let error):
+                    completion(.failure(error))
+                 
+                }
+            }
+        
+        
+        }
     func createActiveChat(user: MUser, message: String, completion: @escaping (Result<Void, Error>) -> Void) {
 //       print("\n---------\n")
 //        print("current user is: \(currentUser)")

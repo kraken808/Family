@@ -18,16 +18,15 @@ class LoginViewController: UIViewController {
         var stackView: UIStackView!
         var forgotPasswordButton: UIButton!
         var googleSignInButton: GIDSignInButton!
-        var ref: DatabaseReference!
-    var databaseHandle: DatabaseHandle!
+       
         override func viewDidLoad() {
             super.viewDidLoad()
            
             self.navigationController?.navigationBar.isHidden = true
             view.backgroundColor = .white
             
-            //set firebase reference
-                   ref = Database.database().reference()
+       
+                
             
             
             

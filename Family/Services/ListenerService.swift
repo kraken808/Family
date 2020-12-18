@@ -56,12 +56,12 @@ class ListenerService {
         let usersListener = db.collection("posts").addSnapshotListener { (querySnapshot, error) in
             guard let snapshot = querySnapshot else {
                 completion(.failure(error!))
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!\n!!!!!!!!!")
+               
                 return
             }
             snapshot.documentChanges.forEach { (diff) in
                 guard let mpost = MPost(document: diff.document) else { return }
-                print("\(mpost)\n")
+               
                 switch diff.type {
                 case .added:
                     items.append(mpost)
@@ -76,7 +76,34 @@ class ListenerService {
             completion(.success(items))
         }
         return usersListener
+    } // itemsObserve
+    
+    func categoryObserve(categories: [MCategory], completion: @escaping (Result<[MCategory], Error>) -> Void) -> ListenerRegistration? {
+        var categories = categories
+        let categoryListener = db.collection("category").addSnapshotListener { (querySnapshot, error) in
+            guard let snapshot = querySnapshot else {
+                completion(.failure(error!))
+                return
+            }
+            snapshot.documentChanges.forEach { (diff) in
+                guard let mcategory = MCategory(document: diff.document) else { return }
+              
+                switch diff.type {
+                case .added:
+                    categories.append(mcategory)
+                case .modified:
+                    guard let index = categories.firstIndex(of: mcategory) else { return }
+                    categories[index] = mcategory
+                case .removed:
+                    guard let index = categories.firstIndex(of: mcategory) else { return }
+                    categories.remove(at: index)
+                }
+            }
+            completion(.success(categories))
+        }
+        return categoryListener
     } // usersObserve
+
     
     func activeChatsObserve(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
         var chats = chats

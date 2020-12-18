@@ -11,16 +11,23 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class ProfileViewController: UIViewController {
-
+    
+        
+     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .orange
         navigationItem.title = "Profile"
+       
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .done, target: self, action: #selector(signOut))
         navigationItem.rightBarButtonItem?.tintColor = .blue
+        
+        
+        
+   
     }
     
-
+   
     @objc func signOut(){
         let ac = UIAlertController(title: nil, message: "Are you sure you want to sign out?", preferredStyle: .alert)
                ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

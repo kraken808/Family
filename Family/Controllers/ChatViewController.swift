@@ -39,9 +39,9 @@ class ChatViewController: UIViewController {
                  
            super.init(nibName: nil, bundle: nil)
          title = currentUser.name
-        print("------------------\n")
-        print("current user: \(currentUser)")
-        print("------------------\n")
+//        print("------------------\n")
+//        print("current user: \(currentUser)")
+//        print("------------------\n")
        }
     
     required init?(coder: NSCoder) {
