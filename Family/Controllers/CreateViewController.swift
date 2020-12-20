@@ -194,7 +194,7 @@ class CreateViewController: UIViewController {
                     self.numOfMembersTextField.text = ""
                     self.fullImageView.circleImageView.image = nil
                     self.periodTextField.text = ""
-                    let tabBarVC = MenuViewController()
+                    let tabBarVC = MenuViewController(currentUser: self.currentUser)
                     UIApplication.shared.keyWindow?.rootViewController = tabBarVC
                 })
             case .failure(let error):

@@ -68,43 +68,55 @@ class MainViewController: UIViewController {
         setupCollectionView()
         createDataSource()
         
-     
-        ListenerService.shared.categoryObserve(completion: { (result) in
-                     switch result {
-                                          case .success(let categories):
-                                            print("------Category starts-------\n")
-                                                    print(categories)
-                                        print("------Category ends-------\n")
-                                            self.categories = categories
-                                            for it in categories{
-                                                self.wrapper.append(contentsOf: [.category(it)])
-                                              }
-        //                                      print("------Category starts-------\n")
-        //                                    print(self.wrapper)
-        //                                      print("------Category ends-------\n")
-//                                              self.reloadData(searchText: nil)
-                                          case .failure(let error):
-                                              print(error.localizedDescription)
-                                          }
-                })
         
-        postListener = ListenerService.shared.itemsObserve(items: items, completion: { (result) in
-             switch result {
-                       case .success(let items):
-                           
-                        self.items = items
-                       
-                           for post in items{
-                            self.wrapper.append(contentsOf: [.post(post)])
-                           }
-//                                 print("------Posts begin-------\n")
-//                                 print(temp)
-//                                 print("------Posts end-------\n")
-                           self.reloadData(searchText: nil)
-                       case .failure(let error):
-                           print(error.localizedDescription)
-                       }
-        })
+        postListener  = ListenerService.shared.itemsObserve(wrapper: wrapper, completion: { (result) in
+                     switch result {
+                               case .success(let wrapper):
+        
+                                self.wrapper = wrapper
+                                   self.reloadData(searchText: nil)
+                               case .failure(let error):
+                                   print(error.localizedDescription)
+                               }
+                })
+    
+     
+//        ListenerService.shared.categoryObserve(completion: { (result) in
+//                     switch result {
+//                                          case .success(let categories):
+//                                            print("------Category starts-------\n")
+//                                                    print(categories)
+//                                        print("------Category ends-------\n")
+//                                            self.categories = categories
+//                                            for it in categories{
+//                                                self.wrapper.append(contentsOf: [.category(it)])
+//                                              }
+//        //                                      print("------Category starts-------\n")
+//        //                                    print(self.wrapper)
+//        //                                      print("------Category ends-------\n")
+////                                              self.reloadData(searchText: nil)
+//                                          case .failure(let error):
+//                                              print(error.localizedDescription)
+//                                          }
+//                })
+        
+//        postListener = ListenerService.shared.itemsObserve(items: items, completion: { (result) in
+//             switch result {
+//                       case .success(let items):
+//
+//                        self.items = items
+//
+//                           for post in items{
+//                            self.wrapper.append(contentsOf: [.post(post)])
+//                           }
+////                                 print("------Posts begin-------\n")
+////                                 print(temp)
+////                                 print("------Posts end-------\n")
+//                           self.reloadData(searchText: nil)
+//                       case .failure(let error):
+//                           print(error.localizedDescription)
+//                       }
+//        })
         
         
         
