@@ -11,6 +11,7 @@ import UIKit
 import FirebaseFirestore
 
 struct MPost: Hashable, Decodable{
+    let id = UUID().uuidString
     var name: String
     var imageUrl: String
     var postOwnerId: String
@@ -26,11 +27,11 @@ struct MPost: Hashable, Decodable{
     func hash(into hasher: inout Hasher) {
         hasher.combine(postId)
     }
-    init(name: String,imageUrl: String,postOwnerId: String,numberOfUsers: String, postId: String, period: String){
+    init(name: String,imageUrl: String,postOwnerId: String,numberOfUsers: String, period: String){
         self.name = name
         self.imageUrl = imageUrl
         self.postOwnerId = postOwnerId
-        self.postId = postId
+        self.postId = id
         self.numberOfUsers = numberOfUsers
         self.period = period
         self.publicationDate = Date()
@@ -51,26 +52,6 @@ struct MPost: Hashable, Decodable{
         temp["publicationDate"] = publicationDate
         temp["period"] = period
            return temp
-       }
-    
-    init?(document: DocumentSnapshot) {
-           guard let data = document.data() else { return nil}
-           guard let name = data["name"] as? String,
-           let imageUrl = data["imageUrl"] as? String,
-           let postOwnerId = data["postOwnerId"] as? String,
-           let postId = data["postId"] as? String,
-           let numberOfUsers = data["numberOfUsers"] as? String,
-          
-           let period = data["period"] as? String else { return nil }
-           guard let publicationDate = data["publicationDate"] as? Timestamp else { return nil }
-        self.name = name
-        self.imageUrl = imageUrl
-        self.postOwnerId = postOwnerId
-        self.postId = postId
-        self.numberOfUsers = numberOfUsers
-        self.publicationDate = publicationDate.dateValue()
-        self.period = period
-        
        }
     init?(document: QueryDocumentSnapshot) {
            let data = document.data()

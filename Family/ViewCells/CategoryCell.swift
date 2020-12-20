@@ -34,9 +34,9 @@ class CategoryCell: UICollectionViewCell, SelfConfiguringCell {
         friendImageView.sd_setImage(with: URL(string: category.imageUrl), completed: nil)
         categoryName.text = category.name
         categoryName.textColor = .black
-        print("-----Category start cell------")
-        print(category)
-        print("-----Category end cell------")
+//        print("-----Category start cell------")
+//        print(category)
+//        print("-----Category end cell------")
         
         
     }

@@ -49,6 +49,7 @@ class CreateViewController: UIViewController {
     
     private let currentUser: MUser
     var categories = [MCategory]()
+    
     init(currentUser: MUser) {
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
@@ -89,7 +90,12 @@ class CreateViewController: UIViewController {
 //                         FirestoreService.shared.saveCategory(name:item.name, iconImage: UIImage(named: item.imageUrl )) { (result) in
 //                                                switch result {
 //                                                          case .success(let _):
-//
+//                                                            print("\n************************************\n")
+//                                                            print("music id: \(self.music.categoryId)\n")
+//                                                            print("edu id: \(self.education.categoryId)\n")
+//                                                            print("moview id: \(self.movies.categoryId)\n")
+//                                                            print("movie == music: \(self.movies == self.music)")
+//                                                            print("\n************************************\n")
 //                                                              self.showAlert(with: "Успешно!", and: "Данные сохранены!",completion: {
 //                                                              })
 //                                                          case .failure(let error):
@@ -188,6 +194,8 @@ class CreateViewController: UIViewController {
                     self.numOfMembersTextField.text = ""
                     self.fullImageView.circleImageView.image = nil
                     self.periodTextField.text = ""
+                    let tabBarVC = MenuViewController()
+                    UIApplication.shared.keyWindow?.rootViewController = tabBarVC
                 })
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)

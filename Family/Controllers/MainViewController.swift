@@ -23,18 +23,18 @@ class MainViewController: UIViewController {
     var categories = [MCategory]()
     var wrapper = [Wrapper]()
     private var postListener: ListenerRegistration?
-    private var categoryListener: ListenerRegistration?
+  
     
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, Wrapper>!
+    var dataSource: UICollectionViewDiffableDataSource<Section, Wrapper>?
    
     enum Section: Int, CaseIterable {
          case category
-        case posts
+        case post
        
         func description() -> String {
             switch self {
-            case .posts:
+            case .post:
                 return "Families"
             
             case .category:
@@ -53,7 +53,8 @@ class MainViewController: UIViewController {
     
     deinit {
         postListener?.remove()
-        categoryListener?.remove()
+//        categoryListener?.remove()
+     
     }
     
     required init?(coder: NSCoder) {
@@ -68,27 +69,20 @@ class MainViewController: UIViewController {
         createDataSource()
         
      
-        
-//        postListener = ListenerService.shared.usersObserve(users: users, completion: { (result) in
-//            switch result {
-//            case .success(let users):
-//                self.users = users
-//                self.reloadData(with: nil)
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        })
-        categoryListener = ListenerService.shared.categoryObserve(categories: categories, completion: { (result) in
+        ListenerService.shared.categoryObserve(completion: { (result) in
                      switch result {
                                           case .success(let categories):
-                                
+                                            print("------Category starts-------\n")
+                                                    print(categories)
+                                        print("------Category ends-------\n")
+                                            self.categories = categories
                                             for it in categories{
                                                 self.wrapper.append(contentsOf: [.category(it)])
                                               }
         //                                      print("------Category starts-------\n")
         //                                    print(self.wrapper)
         //                                      print("------Category ends-------\n")
-                                              self.reloadData(searchText: nil)
+//                                              self.reloadData(searchText: nil)
                                           case .failure(let error):
                                               print(error.localizedDescription)
                                           }
@@ -98,8 +92,8 @@ class MainViewController: UIViewController {
              switch result {
                        case .success(let items):
                            
-                        
-                           
+                        self.items = items
+                       
                            for post in items{
                             self.wrapper.append(contentsOf: [.post(post)])
                            }
@@ -148,7 +142,7 @@ class MainViewController: UIViewController {
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Wrapper>()
-        snapshot.appendSections([.category,.posts])
+        snapshot.appendSections([.category,.post])
         var wrapperCtgry = [Wrapper]()
         var wrapperPst = [Wrapper]()
 //        print("----------Wrapper [] start---------\n")
@@ -165,11 +159,11 @@ class MainViewController: UIViewController {
         }
         snapshot.appendItems(wrapperCtgry,toSection: .category)
        
-            snapshot.appendItems(wrapperPst,toSection: .posts)
-        
-//                    print("----------Wrapper start---------\n")
-//                                  print(wrapper)
-//                                  print("----------Wrapper end---------\n")
+            snapshot.appendItems(wrapperPst,toSection: .post)
+//        
+//                    print("----------WrapperPst start---------\n")
+//                                  print(wrapperPst)
+//                                  print("----------WrapperPst end---------\n")
         
 
         dataSource?.apply(snapshot, animatingDifferences: true)
@@ -186,33 +180,45 @@ extension MainViewController {
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
+            var cat: MCategory?
+            var pot: MPost?
             switch categ{
-                
+               
             case .category(let ctgry):
+                cat = ctgry
 //                print("----------Ctgry---------\n")
 //                print(ctgry)
 //                print("----------Ctgry---------\n")
-                return self.configure(collectionView: collectionView, cellType: CategoryCell.self, with: ctgry, for: indexPath)
+//                return self.configure(collectionView: collectionView, cellType: CategoryCell.self, with: ctgry, for: indexPath)
             case .post(let pst):
+                 pot = pst
 //                print("----------Pst Start--------\n")
 //                               print(pst)
 //                               print("----------Pst end---------\n")
-                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: pst, for: indexPath)
+//                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: pst, for: indexPath)
             }
-
-//            switch section {
-//            case .posts:
-//                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: categ, for: indexPath)
-//            case .category:
-//                return self.configure(collectionView: collectionView, cellType: CategoryCell.self, with: categ, for: indexPath)
-//            }
+                           
+            
+                
+            switch section {
+            case .post:
+                print("----------pot start---------\n")
+                                print(pot)
+                                print("----------pot end---------\n")
+                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: pot, for: indexPath)
+            case .category:
+                print("----------cat start---------\n")
+                                           print(cat)
+                                           print("----------cat end---------\n")
+                return self.configure(collectionView: collectionView, cellType: CategoryCell.self, with: cat, for: indexPath)
+            }
         })
         
         dataSource?.supplementaryViewProvider = {
             collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { fatalError("Can not create new section header") }
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
-//            let items = self.dataSource.snapshot().itemIdentifiers(inSection: .posts)
+//            let items = self.dataSource?.snapshot().itemIdentifiers(inSection: .post)
             sectionHeader.configure(text: section.description(),
                                     font: .laoSangamMN20(),
                                     textColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
@@ -231,7 +237,7 @@ extension MainViewController {
             }
         
             switch section {
-            case .posts:
+            case .post:
                 return self.createUsersSection()
             case .category:
                 return self.createCategory()

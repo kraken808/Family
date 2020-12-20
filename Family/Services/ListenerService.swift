@@ -61,7 +61,9 @@ class ListenerService {
             }
             snapshot.documentChanges.forEach { (diff) in
                 guard let mpost = MPost(document: diff.document) else { return }
-               
+//                print("--------Added post start--------\n")
+//                print(mpost)
+//                 print("--------Added post end--------\n")
                 switch diff.type {
                 case .added:
                     items.append(mpost)
@@ -78,16 +80,48 @@ class ListenerService {
         return usersListener
     } // itemsObserve
     
-    func categoryObserve(categories: [MCategory], completion: @escaping (Result<[MCategory], Error>) -> Void) -> ListenerRegistration? {
-        var categories = categories
-        let categoryListener = db.collection("category").addSnapshotListener { (querySnapshot, error) in
+//    func categoryObserve( completion: @escaping (Result<[MCategory], Error>) -> Void) -> ListenerRegistration? {
+//        var categories = [MCategory]()
+//
+//        let categoryListener = db.collection("category").addSnapshotListener { (querySnapshot, error) in
+//            guard let snapshot = querySnapshot else {
+//                completion(.failure(error!))
+//                return
+//            }
+//            snapshot.documentChanges.forEach { (diff) in
+//                guard let mcategory = MCategory(document: diff.document) else { return }
+//                print("snap CATEGORY START\n")
+//                print(mcategory)
+//                print("snap CATEGORY END\n")
+//                switch diff.type {
+//                case .added:
+//                    categories.append(mcategory)
+//                case .modified:
+//                    guard let index = categories.firstIndex(of: mcategory) else { return }
+//                    categories[index] = mcategory
+//                case .removed:
+//                    guard let index = categories.firstIndex(of: mcategory) else { return }
+//                    categories.remove(at: index)
+//                }
+//            }
+//            completion(.success(categories))
+//        }
+//        return categoryListener
+//    } // usersObserve
+
+    func categoryObserve( completion: @escaping (Result<[MCategory], Error>) -> Void) {
+        var categories = [MCategory]()
+    
+         db.collection("category").addSnapshotListener { (querySnapshot, error) in
             guard let snapshot = querySnapshot else {
                 completion(.failure(error!))
                 return
             }
             snapshot.documentChanges.forEach { (diff) in
                 guard let mcategory = MCategory(document: diff.document) else { return }
-              
+                 print("--------Added category start--------\n")
+                               print(mcategory)
+                print("--------Added category end--------\n")
                 switch diff.type {
                 case .added:
                     categories.append(mcategory)
@@ -101,10 +135,8 @@ class ListenerService {
             }
             completion(.success(categories))
         }
-        return categoryListener
+        
     } // usersObserve
-
-    
     func activeChatsObserve(chats: [MChat], completion: @escaping (Result<[MChat], Error>) -> Void) -> ListenerRegistration? {
         var chats = chats
         let chatsRef = db.collection(["users", currentUserId, "activeChats"].joined(separator: "/"))

@@ -65,63 +65,44 @@ class FirestoreService{
         }
     
     }
-    func savePostInfo(name: String,
-    postImage: UIImage?,
-    postOwnerId: String,
-    numberOfUsers: String,
-    period: String,completion:@escaping (Result<MPost,Error>) -> Void){
-          guard postImage != #imageLiteral(resourceName: "avatar") else {
+       func savePostInfo(name: String,
+        postImage: UIImage?,
+        postOwnerId: String,
+        numberOfUsers: String,
+        period: String,completion:@escaping (Result<MPost,Error>) -> Void){
+              guard postImage != #imageLiteral(resourceName: "avatar") else {
+            
+                        print("error image")
+                        return
+                    }
+   
+                         
+                    var mpost = MPost(name: name,
+                                      imageUrl: "",
+                                      postOwnerId: postOwnerId,
+                                      numberOfUsers: numberOfUsers,
+                                      period: period)
+            
         
-                    print("error image")
-                    return
-                }
-        
-                let uuid = UUID().uuidString
-                
-                     
-                     
-                var mpost = MPost(name: name,
-                                  imageUrl: "",
-                                  postOwnerId: postOwnerId,
-                                  numberOfUsers: numberOfUsers,
-                                  postId: uuid,
-                                  period: period)
-        
-        let temp = db.collection("posts").document(uuid)
-              StorageService.shared.upload(photo: postImage!){ (result) in
-                  switch result {
-                      
-                  case .success(let url):
-                      mpost.imageUrl = url.absoluteString
-                       temp.setData(mpost.convert)
-                      completion(.success(mpost))
-                  case .failure(let error):
-                      completion(.failure(error))
-                   
+                  StorageService.shared.upload(photo: postImage!){ (result) in
+                      switch result {
+                          
+                      case .success(let url):
+                          mpost.imageUrl = url.absoluteString
+                          self.db.collection("posts").document(mpost.postId).setData(mpost.convert){ (error) in
+                              if let error = error {
+                                  completion(.failure(error))
+                              } else {
+                                  completion(.success(mpost))
+                              }
+                          }
+                      case .failure(let error):
+                          completion(.failure(error))
+                       
+                      }
                   }
-              }
-                      
-//        let newUserRef = db.collection(["users", postOwnerId, "posts"].joined(separator: "/")).document(uuid)
-//
-//                StorageService.shared.upload(photo: postImage!){ (result) in
-//                    switch result {
-//
-//                    case .success(let url):
-//                        mpost.imageUrl = url.absoluteString
-//
-//                         newUserRef.setData(mpost.convert) { (error) in
-//                         if let error = error {
-//                             completion(.failure(error))
-//                             return
-//                         }
-//                        }
-//                        completion(.success(mpost))
-//                    case .failure(let error):
-//                        completion(.failure(error))
-//
-//                    }
-//                }
-    }
+
+        }
     
     func saveCategory(name: String, iconImage: UIImage?,completion: @escaping (Result<MCategory, Error>) -> Void){
         
@@ -132,12 +113,8 @@ class FirestoreService{
                 return
             }
              
-            
-                 
             var mcategory =  MCategory(name: name, imageUrl: "")
             
-        let id = UUID().uuidString
-        mcategory.categoryId = id
         
             let newUserRef = db.collection("category").document(mcategory.categoryId)
             StorageService.shared.uploadCategory(photo: iconImage!){ (result) in
@@ -231,4 +208,5 @@ class FirestoreService{
               }
           }
       }
+    
 }
