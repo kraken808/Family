@@ -17,6 +17,7 @@ struct MPost: Hashable, Decodable{
     var postOwnerId: String
     var numberOfUsers: String
     var postId: String
+    var category: String
     var publicationDate: Date
     var period: String
     
@@ -27,12 +28,13 @@ struct MPost: Hashable, Decodable{
     func hash(into hasher: inout Hasher) {
         hasher.combine(postId)
     }
-    init(name: String,imageUrl: String,postOwnerId: String,numberOfUsers: String, period: String){
+    init(name: String,imageUrl: String,postOwnerId: String,numberOfUsers: String, category: String, period: String){
         self.name = name
         self.imageUrl = imageUrl
         self.postOwnerId = postOwnerId
         self.postId = id
         self.numberOfUsers = numberOfUsers
+        self.category = category
         self.period = period
         self.publicationDate = Date()
     }
@@ -50,6 +52,7 @@ struct MPost: Hashable, Decodable{
         temp["postId"] = postId
         temp["numberOfUsers"] = numberOfUsers
         temp["publicationDate"] = publicationDate
+        temp["category"] = category
         temp["period"] = period
            return temp
        }
@@ -58,6 +61,7 @@ struct MPost: Hashable, Decodable{
              guard let name = data["name"] as? String,
               let imageUrl = data["imageUrl"] as? String,
               let postOwnerId = data["postOwnerId"] as? String,
+              let category = data["category"] as? String,
               let postId = data["postId"] as? String,
               let numberOfUsers = data["numberOfUsers"] as? String,
              
@@ -68,6 +72,7 @@ struct MPost: Hashable, Decodable{
               self.postOwnerId = postOwnerId
               self.postId = postId
               self.numberOfUsers = numberOfUsers
+        self.category = category
               self.publicationDate = publicationDate.dateValue()
               self.period = period
          

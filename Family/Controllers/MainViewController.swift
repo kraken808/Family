@@ -132,7 +132,7 @@ class MainViewController: UIViewController {
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
-        collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
+        collectionView.register(PostCell.self, forCellWithReuseIdentifier: PostCell.reuseId)
         collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.reuseId)
         collectionView.delegate = self
     }
@@ -217,7 +217,7 @@ extension MainViewController {
                 print("----------pot start---------\n")
                                 print(pot)
                                 print("----------pot end---------\n")
-                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: pot, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: PostCell.self, with: pot, for: indexPath)
             case .category:
                 print("----------cat start---------\n")
                                            print(cat)
@@ -233,7 +233,7 @@ extension MainViewController {
 //            let items = self.dataSource?.snapshot().itemIdentifiers(inSection: .post)
             sectionHeader.configure(text: section.description(),
                                     font: .laoSangamMN20(),
-                                    textColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
+                                    textColor: #colorLiteral(red: 0.9236214757, green: 0.9337256551, blue: 0.9419805408, alpha: 0.5))
             return sectionHeader
         }
     }
@@ -250,7 +250,7 @@ extension MainViewController {
         
             switch section {
             case .post:
-                return self.createUsersSection()
+                return self.createPostsSection()
             case .category:
                 return self.createCategory()
             }
@@ -273,7 +273,7 @@ extension MainViewController {
            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
            
            let section = NSCollectionLayoutSection(group: group)
-           section.interGroupSpacing = 20
+           section.interGroupSpacing = 10
            section.contentInsets = NSDirectionalEdgeInsets.init(top: 16, leading: 20, bottom: 0, trailing: 20)
            section.orthogonalScrollingBehavior = .continuous
      
@@ -282,13 +282,13 @@ extension MainViewController {
            return section
        }
     
-    private func createUsersSection() -> NSCollectionLayoutSection {
+    private func createPostsSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(0.6))
+                                               heightDimension: .fractionalWidth(0.7))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
         let spacing = CGFloat(15)
         group.interItemSpacing = .fixed(spacing)
@@ -321,10 +321,54 @@ extension MainViewController: UISearchBarDelegate {
 
 // MARK: - UICollectionViewDelegate
 extension MainViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        guard let user = self.dataSource.itemIdentifier(for: indexPath) else { return }
-//        
-////        let profileVC = PersonProfileViewController(user: user)
-////        present(profileVC, animated: true, completion: nil)
-//    }
+   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let wrap = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        guard let section = Section(rawValue: indexPath.section) else { return }
+    var category: MCategory?
+    var post: MPost?
+    switch wrap{
+        
+    case .category(let ctgry):
+        category = ctgry
+    case .post(let pst):
+        post = pst
+    }
+        switch section {
+        case .category:
+            
+            let groupVC = GroupViewController(currentUser: currentUser, category: category!)
+                       navigationController?.pushViewController(groupVC, animated: true)
+           
+        case .post:
+            let refreshAlert = UIAlertController(title: "Refresh", message: "Do you want to resrve", preferredStyle: UIAlertController.Style.alert)
+
+            refreshAlert.addAction(UIAlertAction(title: "Reserve", style: .default, handler: { (action: UIAlertAction!) in
+                FirestoreService.shared.reservePost(postId: post!.postId, user: self.currentUser) { (result) in
+                            switch result {
+                            case .success(let mpost):
+                                    print("ok")
+//                                    let tabBarVC = MenuViewController(currentUser: self.currentUser)
+//                                    UIApplication.shared.keyWindow?.rootViewController = tabBarVC
+                               
+                            case .failure(let error):
+                                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+                            }
+                            }
+            }))
+
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+                print("Handle Cancel Logic here")
+            }))
+
+            present(refreshAlert, animated: true, completion: nil)
+             
+                           
+            
+                              
+                          
+//           let chatRequestVC = ChatRequestViewController(chat: chat)
+//                      chatRequestVC.delegate = self
+//                      self.present(chatRequestVC, animated: true, completion: nil)
+        }
+    }
 }

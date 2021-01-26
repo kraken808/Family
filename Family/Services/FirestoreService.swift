@@ -14,6 +14,9 @@ class FirestoreService{
     
     let db = Firestore.firestore()
     var currentUser: MUser!
+    private let  educationID = "0AEA6B8A-60F7-439D-9918-9B12C20AC46B"
+    private let  musicID = "61D4AF46-1F73-4C39-B5EA-DE9523A51375"
+    private let movieID = "AD3DDC9B-549B-4491-AB1A-2290803D4640"
  
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void){
         let dataRef = db.collection("users").document(user.uid)
@@ -69,7 +72,10 @@ class FirestoreService{
         postImage: UIImage?,
         postOwnerId: String,
         numberOfUsers: String,
+        category: String,
         period: String,completion:@escaping (Result<MPost,Error>) -> Void){
+        
+
               guard postImage != #imageLiteral(resourceName: "avatar") else {
             
                         print("error image")
@@ -81,7 +87,20 @@ class FirestoreService{
                                       imageUrl: "",
                                       postOwnerId: postOwnerId,
                                       numberOfUsers: numberOfUsers,
+                                      category: category,
                                       period: period)
+                var id = ""
+               if mpost.category == "Music"{
+                  id = musicID
+               }else if mpost.category == "Education"{
+                id = educationID
+                }
+               else if mpost.category == "Movie"{
+                id = movieID
+                }
+           
+        
+        
             
         
                   StorageService.shared.upload(photo: postImage!){ (result) in
@@ -89,6 +108,13 @@ class FirestoreService{
                           
                       case .success(let url):
                           mpost.imageUrl = url.absoluteString
+                          self.db.collection(["category", id, "posts"].joined(separator: "/")).document(mpost.id).setData(mpost.convert) { (error) in
+                                                   if let error = error {
+                                                       completion(.failure(error))
+                                                       return
+                                                   }
+
+                                                   }
                           self.db.collection("posts").document(mpost.postId).setData(mpost.convert){ (error) in
                               if let error = error {
                                   completion(.failure(error))
@@ -100,9 +126,23 @@ class FirestoreService{
                           completion(.failure(error))
                        
                       }
+                   
                   }
+      
+    }
+    
+    func reservePost(postId: String, user:MUser ,completion:@escaping (Result<MPost,Error>) -> Void){
+         
+        
+        db.collection(["posts", postId, "members"].joined(separator: "/")).document(user.uid).setData(user.convert) { (error) in
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
 
         }
+       
+     }
     
     func saveCategory(name: String, iconImage: UIImage?,completion: @escaping (Result<MCategory, Error>) -> Void){
         
@@ -209,4 +249,5 @@ class FirestoreService{
           }
       }
     
+
 }

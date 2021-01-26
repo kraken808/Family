@@ -40,7 +40,7 @@
 		FB2B375E25615615001F1448 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B375D25615615001F1448 /* UIViewController.swift */; };
 		FB2B376025615720001F1448 /* ListenerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B375F25615720001F1448 /* ListenerService.swift */; };
 		FB2B3762256157D3001F1448 /* MMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B3761256157D3001F1448 /* MMessage.swift */; };
-		FB2B37642561636B001F1448 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B37632561636B001F1448 /* UserCell.swift */; };
+		FB2B37642561636B001F1448 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B37632561636B001F1448 /* PostCell.swift */; };
 		FB2B3766256167B8001F1448 /* PersonProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B3765256167B8001F1448 /* PersonProfileViewController.swift */; };
 		FB2B376825616879001F1448 /* InsertableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B376725616879001F1448 /* InsertableTextField.swift */; };
 		FB2B376A25616DAA001F1448 /* UIView + extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2B376925616DAA001F1448 /* UIView + extension.swift */; };
@@ -54,6 +54,8 @@
 		FBB9D8A324FD19A10074579F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBB9D8A224FD19A10074579F /* Assets.xcassets */; };
 		FBB9D8A624FD19A10074579F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBB9D8A424FD19A10074579F /* LaunchScreen.storyboard */; };
 		FBDDF98D257B3F3D00E775E7 /* MPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDDF98C257B3F3D00E775E7 /* MPost.swift */; };
+		FBF473CB2590F36800399DFE /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF473CA2590F36800399DFE /* GroupViewController.swift */; };
+		FBF473CF2591232D00399DFE /* SortedPostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF473CE2591232D00399DFE /* SortedPostsCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,7 +94,7 @@
 		FB2B375D25615615001F1448 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		FB2B375F25615720001F1448 /* ListenerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenerService.swift; sourceTree = "<group>"; };
 		FB2B3761256157D3001F1448 /* MMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMessage.swift; sourceTree = "<group>"; };
-		FB2B37632561636B001F1448 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		FB2B37632561636B001F1448 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		FB2B3765256167B8001F1448 /* PersonProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonProfileViewController.swift; sourceTree = "<group>"; };
 		FB2B376725616879001F1448 /* InsertableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertableTextField.swift; sourceTree = "<group>"; };
 		FB2B376925616DAA001F1448 /* UIView + extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + extension.swift"; sourceTree = "<group>"; };
@@ -108,6 +110,8 @@
 		FBB9D8A524FD19A10074579F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FBB9D8A724FD19A10074579F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FBDDF98C257B3F3D00E775E7 /* MPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPost.swift; sourceTree = "<group>"; };
+		FBF473CA2590F36800399DFE /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		FBF473CE2591232D00399DFE /* SortedPostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedPostsCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,8 +189,9 @@
 				FB071024255EC6040090C26F /* ChatTableViewCell.swift */,
 				FB2B375425612AD4001F1448 /* ActiveChatsCell.swift */,
 				FB2B375625614B47001F1448 /* SectionHeader.swift */,
-				FB2B37632561636B001F1448 /* UserCell.swift */,
+				FB2B37632561636B001F1448 /* PostCell.swift */,
 				FB580B4E258BDCBE00B5E824 /* CategoryCell.swift */,
+				FBF473CE2591232D00399DFE /* SortedPostsCell.swift */,
 			);
 			path = ViewCells;
 			sourceTree = "<group>";
@@ -224,6 +229,7 @@
 				FB070FFE255457A20090C26F /* ChatViewController.swift */,
 				FB07102A256025510090C26F /* MessageViewController.swift */,
 				FB2B3765256167B8001F1448 /* PersonProfileViewController.swift */,
+				FBF473CA2590F36800399DFE /* GroupViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -414,7 +420,7 @@
 				FB07101B255C37E50090C26F /* UIImageView + extension.swift in Sources */,
 				FB2B376025615720001F1448 /* ListenerService.swift in Sources */,
 				FB2B375725614B47001F1448 /* SectionHeader.swift in Sources */,
-				FB2B37642561636B001F1448 /* UserCell.swift in Sources */,
+				FB2B37642561636B001F1448 /* PostCell.swift in Sources */,
 				FB2B3766256167B8001F1448 /* PersonProfileViewController.swift in Sources */,
 				FB2B3762256157D3001F1448 /* MMessage.swift in Sources */,
 				FB071020255D60AA0090C26F /* StorageService.swift in Sources */,
@@ -436,6 +442,7 @@
 				FB07100125545B2E0090C26F /* MUser.swift in Sources */,
 				FBB9D89C24FD199C0074579F /* SceneDelegate.swift in Sources */,
 				FB07101D255C3F650090C26F /* UIStackView+extension.swift in Sources */,
+				FBF473CB2590F36800399DFE /* GroupViewController.swift in Sources */,
 				FB071025255EC6040090C26F /* ChatTableViewCell.swift in Sources */,
 				FB071029255F98FE0090C26F /* MChat.swift in Sources */,
 				FB07100C255C33DF0090C26F /* UIFont + extension.swift in Sources */,
@@ -443,6 +450,7 @@
 				FB071007255C27510090C26F /* SetupUserViewController.swift in Sources */,
 				FB580B4B258A86B400B5E824 /* MCategory.swift in Sources */,
 				FB580B4F258BDCBE00B5E824 /* CategoryCell.swift in Sources */,
+				FBF473CF2591232D00399DFE /* SortedPostsCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

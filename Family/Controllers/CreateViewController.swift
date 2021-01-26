@@ -18,14 +18,14 @@ class CreateViewController: UIViewController {
     var memberPickerView = UIPickerView()
     var periodPickerView = UIPickerView()
     var categoryPickerView = UIPickerView()
-    var numbersArray = [2,3,4,5,6]
+    var numbersArray = [2,3,4,5]
     var periodArray = ["1 Month","2 Month","3 Month", "4 Month or More"]
-    let movies = MCategory(name: "Movie", imageUrl: "reel")
-    let education = MCategory(name: "Education", imageUrl: "book")
-    let music = MCategory(name: "Music", imageUrl: "music")
+//    let movies = MCategory(name: "Movie", imageUrl: "reel")
+//    let education = MCategory(name: "Education", imageUrl: "book")
+//    let music = MCategory(name: "Music", imageUrl: "music")
     
     let mcategory = [MCategory]()
-    var category = ["Movies","Education","Music"]
+    var category = ["Movie","Education","Music"]
     var toolbar: UIToolbar!
    
     let welcomeLabel = UILabel(text: "Create Post", font: .avenir26())
@@ -63,9 +63,9 @@ class CreateViewController: UIViewController {
         super.viewDidLoad()
       
         view.backgroundColor = .white
-        categories.append(movies)
-        categories.append(education)
-        categories.append(music)
+//        categories.append(movies)
+//        categories.append(education)
+//        categories.append(music)
         numOfMembersTextField.inputView = memberPickerView
         periodTextField.inputView = periodPickerView
         categoryTextField.inputView = categoryPickerView
@@ -180,11 +180,11 @@ class CreateViewController: UIViewController {
     }
     
     @objc func publicateButtonTapped(){
-       
+        print(categoryTextField.text!)
         FirestoreService.shared.savePostInfo(name: nameTextField.text!,
                                              postImage: fullImageView.circleImageView.image,
                                              postOwnerId: currentUser.uid,
-                                             numberOfUsers: numOfMembersTextField.text!,
+                                             numberOfUsers: numOfMembersTextField.text!, category: categoryTextField.text!,
                                              period: periodTextField.text!) { (result) in
             switch result {
             case .success(let mpost):
@@ -194,6 +194,7 @@ class CreateViewController: UIViewController {
                     self.numOfMembersTextField.text = ""
                     self.fullImageView.circleImageView.image = nil
                     self.periodTextField.text = ""
+                    self.categoryTextField.text = nil
                     let tabBarVC = MenuViewController(currentUser: self.currentUser)
                     UIApplication.shared.keyWindow?.rootViewController = tabBarVC
                 })

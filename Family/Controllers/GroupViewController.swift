@@ -1,42 +1,31 @@
 //
-//  ChatViewController.swift
+//  GroupViewController.swift
 //  Family
 //
-//  Created by Murat Merekov on 05.11.2020.
+//  Created by Murat Merekov on 21.12.2020.
 //  Copyright © 2020 Murat Merekov. All rights reserved.
 //
+
 
 import UIKit
 import FirebaseFirestore
 
-class ChatViewController: UIViewController {
+class GroupViewController: UIViewController {
     
-    var activeChats = [MChat]()
-    
-    
-   
-    private var activeChatsListener: ListenerRegistration?
-    
+    var posts = [MPost]()
     enum Section: Int, CaseIterable {
-        case activeChats
-        
-        func description() -> String {
-            switch self {
-            case .activeChats:
-                return "Active chats"
-            
-        }
+        case posts
     }
-    }
-    
-    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
+    private var postListener: ListenerRegistration?
+    var dataSource: UICollectionViewDiffableDataSource<Section, MPost>?
     var collectionView: UICollectionView!
     
     private let currentUser: MUser
-       
-       init(currentUser: MUser) {
+    private let category: MCategory
+    
+    init(currentUser: MUser, category: MCategory) {
         self.currentUser = currentUser
-                 
+        self.category = category
            super.init(nibName: nil, bundle: nil)
          title = currentUser.name
 //        print("------------------\n")
@@ -52,24 +41,24 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Chats"
+        title = "Category Name"
         setupSearchBar()
         setupCollectionView()
         createDataSource()
-        reloadData()
+      
         
      
         
-        activeChatsListener = ListenerService.shared.activeChatsObserve(chats: activeChats, completion: { (result) in
-            switch result {
-            case .success(let chats):
-                self.activeChats = chats
-                self.reloadData()
-            case .failure(let error):
-                
-                print(error.localizedDescription)
-            }
-        })
+//        postListener = ListenerService.shared.sortedPostsObserve(posts: posts,categoryID:category.categoryId,  completion: { (result) in
+//            switch result {
+//            case .success(let posts):
+//                self.posts = posts
+//                self.reloadData()
+//            case .failure(let error):
+//                
+//                print(error.localizedDescription)
+//            }
+//        })
     }
     
     private func setupSearchBar() {
@@ -91,52 +80,54 @@ class ChatViewController: UIViewController {
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
-        collectionView.register(ActiveChatsCell.self, forCellWithReuseIdentifier: ActiveChatsCell.reuseId)
+        collectionView.register(SortedPostsCell.self, forCellWithReuseIdentifier: SortedPostsCell.reuseId)
         
         
         collectionView.delegate = self
     }
     
     private func reloadData() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, MChat>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MPost>()
         
-        snapshot.appendSections([.activeChats])
-        snapshot.appendItems(activeChats, toSection: .activeChats)
+        snapshot.appendSections([.posts])
+        snapshot.appendItems(posts, toSection: .posts)
 
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }
 
 // MARK: - Data Source
-extension ChatViewController {
+extension GroupViewController {
     
     private func createDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, chat) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, MPost>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, post) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
             
             switch section {
-            case .activeChats:
-                return self.configure(collectionView: collectionView, cellType: ActiveChatsCell.self, with: chat, for: indexPath)
+            case .posts:
+                return self.configure(collectionView: collectionView, cellType: SortedPostsCell.self, with: post, for: indexPath)
             
             }
         })
+        
         
         dataSource?.supplementaryViewProvider = {
             collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { fatalError("Can not create new section header") }
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
-            sectionHeader.configure(text: section.description(),
+            sectionHeader.configure(text: "\(self.category.name)",
                                     font: .laoSangamMN20(),
                                     textColor: #colorLiteral(red: 0.5741485357, green: 0.5741624236, blue: 0.574154973, alpha: 1))
             return sectionHeader
         }
+      
     }
 }
 
 // MARK: - Setup layout
-extension ChatViewController {
+extension GroupViewController {
     private func createCompositionalLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (senctionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
             
@@ -145,7 +136,7 @@ extension ChatViewController {
             }
         
             switch section {
-            case .activeChats:
+            case .posts:
                 return self.createActiveChats()
             
             }
@@ -207,17 +198,17 @@ extension ChatViewController {
 }
 
 // MARK: - UICollectionViewDelegate
-extension ChatViewController: UICollectionViewDelegate {
+extension GroupViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let chat = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         guard let section = Section(rawValue: indexPath.section) else { return }
         
         switch section {
-        case .activeChats:
+        case .posts:
             print(indexPath)
-            let chatsVC = MessageViewController(user: currentUser, chat: chat)
-            navigationController?.pushViewController(chatsVC, animated: true)
+//            let chatsVC = MessageViewController(user: currentUser, chat: chat)
+//            navigationController?.pushViewController(chatsVC, animated: true)
         }
     }
 }
@@ -225,7 +216,7 @@ extension ChatViewController: UICollectionViewDelegate {
 
 
 // MARK: - UISearchBarDelegate
-extension ChatViewController: UISearchBarDelegate {
+extension GroupViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
     }
@@ -238,17 +229,17 @@ extension ChatViewController: UISearchBarDelegate {
 //    static var previews: some View {
 //        ContainerView().edgesIgnoringSafeArea(.all)
 //    }
-//    
+//
 //    struct ContainerView: UIViewControllerRepresentable {
-//        
+//
 //        let tabBarVC = MenuViewController()
-//        
+//
 //        func makeUIViewController(context: UIViewControllerRepresentableContext<ListVCProvider.ContainerView>) -> MenuViewController {
 //            return tabBarVC
 //        }
-//        
+//
 //        func updateUIViewController(_ uiViewController: ListVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<ListVCProvider.ContainerView>) {
-//            
+//
 //        }
 //    }
 //}

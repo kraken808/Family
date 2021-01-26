@@ -15,6 +15,7 @@ extension UIImageView {
         
         self.image = image
         self.contentMode = contentMode
+        
     }
     
 }
